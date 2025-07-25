@@ -1,5 +1,6 @@
 'use client';
 
+import { addPet } from '@/actions/actions';
 import { Pet } from '@/lib/types';
 import React, { createContext, useState } from 'react';
 
@@ -35,11 +36,29 @@ export default function PetContextProvider({
   const numberOfPets = pets.length;
 
   //event handlers
-  const handleAddPet = (newPet: Omit<Pet, 'id'>) => {
-    setPets((prevPets) => [
-      ...prevPets,
-      { ...newPet, id: crypto.randomUUID() },
-    ]);
+  const handleAddPet = async (newPet: Omit<Pet, 'id'>) => {
+    // setPets((prevPets) => [
+    //   ...prevPets,
+    //   { ...newPet, id: crypto.randomUUID() },
+    // ]);
+    // fetch("https://petsoft.com/api/pets", {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({ ...newPet, id: crypto.randomUUID() }),
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //   console.log('Pet added successfully:', data);
+    // }
+    // )
+    // .catch((error) => {
+    //   console.error('Error adding pet:', error);
+    // }
+    // );
+    // setSelectedPetId(null); // Reset selected pet after adding
+    await addPet(newPet);
   };
 
   const handleEditPet = (petId: string, newPetData: Omit<Pet, 'id'>) => {
@@ -48,7 +67,7 @@ export default function PetContextProvider({
         pet.id === petId ? { ...pet, ...newPetData } : pet
       )
     );
-    setSelectedPetId(null); // Reset selected pet after editing
+    // setSelectedPetId(null); // Reset selected pet after editing
   };
 
   const handleCheckoutPet = (id: string) => {

@@ -4,26 +4,25 @@ const prisma = new PrismaClient();
 
 const pets = [
   {
-    name: 'Benjamin',
-    ownerName: 'John Doe',
+    name: 'Mushu',
+    ownerName: 'Doug Sellers',
     imageUrl: 'https://bytegrad.com/course-assets/images/rn-image-4.png',
     age: 2,
-    notes:
-      "Doesn't like to be touched on the belly. Plays well with other dogs.",
+    notes: 'Loves to bark. Plays well with other dogs.',
   },
   {
-    name: 'Richard',
-    ownerName: 'Josephine Dane',
+    name: 'Oso',
+    ownerName: 'Zai Sellers',
     imageUrl: 'https://bytegrad.com/course-assets/images/rn-image-5.png',
-    age: 5,
-    notes: 'Needs medication twice a day.',
+    age: 2,
+    notes: 'Loves to play with other dogs. Loves to chase girls.',
   },
   {
-    name: 'Anna',
-    ownerName: 'Frank Doe',
+    name: 'Bear',
+    ownerName: 'Doug Sellers',
     imageUrl: 'https://bytegrad.com/course-assets/images/rn-image-6.png',
-    age: 4,
-    notes: 'Allergic to chicken.',
+    age: 22,
+    notes: 'Hungy for adventures',
   },
 ];
 
