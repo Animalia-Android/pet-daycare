@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
+import { addPet } from '@/actions/actions';
 
 type PetFormProps = {
   actionType: 'add' | 'edit';
@@ -23,32 +24,32 @@ export default function PetForm({
   } = usePetContext();
 
   // Handle form submission
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Handle form submission logic here
-    const formData = new FormData(event.currentTarget);
-    // const newPet = Object.fromEntries(formData.entries());
-    const pet = {
-      name: formData.get('name') as string,
-      ownerName: formData.get('ownerName') as string,
-      imageUrl:
-        (formData.get('imageUrl') as string) ||
-        'https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png',
-      age: Number(formData.get('age')) as number,
-      notes: formData.get('notes') as string,
-    };
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   // Handle form submission logic here
+  //   const formData = new FormData(event.currentTarget);
+  //   // const newPet = Object.fromEntries(formData.entries());
+  //   const pet = {
+  //     name: formData.get('name') as string,
+  //     ownerName: formData.get('ownerName') as string,
+  //     imageUrl:
+  //       (formData.get('imageUrl') as string) ||
+  //       'https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png',
+  //     age: Number(formData.get('age')) as number,
+  //     notes: formData.get('notes') as string,
+  //   };
 
-    if (actionType === 'add') {
-      handleAddPet(pet);
-    } else if (actionType === 'edit' && selectedPet) {
-      handleEditPet(selectedPet!.id, pet);
-    }
+  //   if (actionType === 'add') {
+  //     handleAddPet(pet);
+  //   } else if (actionType === 'edit' && selectedPet) {
+  //     handleEditPet(selectedPet!.id, pet);
+  //   }
 
-    onFormSubmission();
-  };
+  //   onFormSubmission();
+  // };
 
   return (
-    <form className="flex flex-col" onSubmit={handleSubmit}>
+    <form className="flex flex-col" action={addPet}>
       <div className="space-y-3">
         <div className="space-y-1">
           <Label htmlFor="name">Name</Label>
