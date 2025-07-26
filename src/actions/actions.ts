@@ -1,6 +1,7 @@
 'use server';
 
 import { Pet } from '@/lib/types';
+import { revalidatePath } from 'next/cache';
 
 export async function addPet(formData) {
   console.log('Adding pet:', formData);
@@ -19,4 +20,6 @@ export async function addPet(formData) {
       notes: formData.get('notes'),
     },
   });
+
+  revalidatePath('/app/', 'layout'); // Revalidate the path to update the data
 }
