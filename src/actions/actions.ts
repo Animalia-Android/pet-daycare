@@ -11,17 +11,23 @@ export async function addPet(formData) {
   //   data: pet,
   // });
 
-  await prisma?.pet.create({
-    data: {
-      name: formData.get('name'),
-      ownerName: formData.get('ownerName'),
-      age: parseInt(formData.get('age')),
-      imageUrl:
-        formData.get('imageUrl') ||
-        'https://cdn-icons-png.flaticon.com/512/235/235405.png',
-      notes: formData.get('notes'),
-    },
-  });
+  try {
+    await prisma?.pet.create({
+      data: {
+        name: formData.get('name'),
+        ownerName: formData.get('ownerName'),
+        age: parseInt(formData.get('age')),
+        imageUrl:
+          formData.get('imageUrl') ||
+          'https://cdn-icons-png.flaticon.com/512/235/235405.png',
+        notes: formData.get('notes'),
+      },
+    });
+  } catch (error) {
+    return {
+      message: 'Failed to add pet. Please try again later.',
+    };
+  }
 
   revalidatePath('/app/', 'layout'); // Revalidate the path to update the data
 }

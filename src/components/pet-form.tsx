@@ -7,6 +7,8 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { addPet } from '@/actions/actions';
 import PetFormBtn from './pet-form-btn';
+import { toast } from 'sonner';
+import { useFormState } from 'react-dom';
 
 type PetFormProps = {
   actionType: 'add' | 'edit';
@@ -17,12 +19,8 @@ export default function PetForm({
   actionType,
   onFormSubmission,
 }: PetFormProps) {
-  const {
-    handleAddPet,
-    handleEditPet,
-    handleChangeSelectedPetId,
-    selectedPet,
-  } = usePetContext();
+  const { selectedPet } = usePetContext();
+  // const [error, formAction] = useFormState(addPet, {});
 
   // Handle form submission
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -53,11 +51,18 @@ export default function PetForm({
     <form
       className="flex flex-col"
       action={async (formData) => {
-        await addPet(formData);
+        const error = await addPet(formData);
+
+        if (error) {
+          toast.warning(error.message);
+          return;
+        }
 
         onFormSubmission();
       }}
+      // action={formAction}
     >
+      {/* {error && <p className="text-red-500">{error.message}</p>} */}
       <div className="space-y-3">
         <div className="space-y-1">
           <Label htmlFor="name">Name</Label>
