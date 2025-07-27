@@ -1,9 +1,11 @@
 'use server';
 
 import { Pet } from '@/lib/types';
+import { sleep } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
 
 export async function addPet(formData) {
+  await sleep(2000); // Simulate a delay for the action
   console.log('Adding pet:', formData);
   // await prisma?.pet.create({
   //   data: pet,
