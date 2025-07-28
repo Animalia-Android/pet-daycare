@@ -31,3 +31,26 @@ export async function addPet(formData) {
 
   revalidatePath('/app/', 'layout'); // Revalidate the path to update the data
 }
+
+export async function editPet(petId, formData) {
+  await sleep(2000); // Simulate a delay for the action
+
+  try {
+    await prisma?.pet.update({
+      where: { id: petId },
+      data: {
+        name: formData.get('name'),
+        ownerName: formData.get('ownerName'),
+        age: parseInt(formData.get('age')),
+        imageUrl: formData.get('imageUrl'),
+        notes: formData.get('notes'),
+      },
+    });
+  } catch (error) {
+    return {
+      message: 'Failed to edit pet. Please try again later.',
+    };
+  }
+
+  revalidatePath('/app/', 'layout'); // Revalidate the path to update the data
+}
