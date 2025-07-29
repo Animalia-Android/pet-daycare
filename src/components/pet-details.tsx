@@ -57,11 +57,7 @@ function TopBar({ pet }: Props) {
         <PetButton actionType="edit">Edit</PetButton>
         <PetButton
           actionType="checkout"
-          onClick={async () => {
-            startTransition(async () => {
-              await deletePet(pet.id);
-            });
-          }}
+          onClick={async () => await handleCheckoutPet(pet.id)}
           disabled={isPending}
         >
           Checkout

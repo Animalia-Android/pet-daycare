@@ -19,7 +19,7 @@ export default function PetForm({
   actionType,
   onFormSubmission,
 }: PetFormProps) {
-  const { selectedPet } = usePetContext();
+  const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
   // const [error, formAction] = useFormState(addPet, {});
 
   // Handle form submission
@@ -51,23 +51,23 @@ export default function PetForm({
     <form
       className="flex flex-col"
       action={async (formData) => {
-        if (actionType === 'add') {
-          const error = await addPet(formData);
-
-          if (error) {
-            toast.warning(error.message);
-            return;
-          }
-        } else if (actionType === 'edit' && selectedPet) {
-          const error = await editPet(selectedPet.id, formData);
-
-          if (error) {
-            toast.warning(error.message);
-            return;
-          }
-        }
-
         onFormSubmission();
+
+        const petData = {
+          name: formData.get('name') as string,
+          ownerName: formData.get('ownerName') as string,
+          imageUrl:
+            (formData.get('imageUrl') as string) ||
+            'https://cdn-icons-png.flaticon.com/512/235/235405.png',
+          age: Number(formData.get('age')) as number,
+          notes: formData.get('notes') as string,
+        };
+
+        if (actionType === 'add') {
+          await handleAddPet(petData);
+        } else if (actionType === 'edit' && selectedPet) {
+          await handleEditPet(selectedPet!.id, petData);
+        }
       }}
       // action={formAction}
     >
