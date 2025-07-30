@@ -6,6 +6,8 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import PetFormBtn from './pet-form-btn';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 type PetFormProps = {
   actionType: 'add' | 'edit';
@@ -16,9 +18,50 @@ type TPetForm = {
   name: string;
   ownerName: string;
   imageUrl?: string;
-  age: number;
+  age: unknown;
   notes: string;
 };
+
+const petFormSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, { message: 'Name is required' })
+    .max(50, { message: 'Name must be less than 50 characters' }),
+  ownerName: z
+    .string()
+    .trim()
+    .min(2, { message: 'Owner name is required' })
+    .max(50, { message: 'Owner name must be less than 50 characters' }),
+  imageUrl: z
+    .string()
+    .trim()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true;
+        try {
+          const url = new URL(val);
+          return ['http:', 'https:'].includes(url.protocol);
+        } catch {
+          return false;
+        }
+      },
+      { message: 'Image URL must be a valid http or https URL' }
+    ),
+  age: z.coerce
+    .number()
+    .int()
+    .positive()
+    .min(0, { message: 'Age must be a positive integer' })
+    .max(100, { message: 'Age must be a positive integer less than 100' }),
+  notes: z.union([
+    z
+      .string()
+      .trim()
+      .max(1000, { message: 'Notes must be less than 500 characters' }),
+  ]),
+});
 
 export default function PetForm({
   actionType,
@@ -27,39 +70,20 @@ export default function PetForm({
   const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
   const {
     register,
+    trigger,
     formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm<TPetForm>();
-  // const [error, formAction] = useFormState(addPet, {});
-
-  // Handle form submission
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   // Handle form submission logic here
-  //   const formData = new FormData(event.currentTarget);
-  //   // const newPet = Object.fromEntries(formData.entries());
-  //   const pet = {
-  //     name: formData.get('name') as string,
-  //     ownerName: formData.get('ownerName') as string,
-  //     imageUrl:
-  //       (formData.get('imageUrl') as string) ||
-  //       'https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png',
-  //     age: Number(formData.get('age')) as number,
-  //     notes: formData.get('notes') as string,
-  //   };
-
-  //   if (actionType === 'add') {
-  //     handleAddPet(pet);
-  //   } else if (actionType === 'edit' && selectedPet) {
-  //     handleEditPet(selectedPet!.id, pet);
-  //   }
-
-  //   onFormSubmission();
-  // };
+  } = useForm<TPetForm>({
+    resolver: zodResolver(petFormSchema),
+  });
 
   return (
     <form
       className="flex flex-col"
       action={async (formData) => {
+        const result = await trigger();
+        if (!result) {
+          return;
+        }
         onFormSubmission();
 
         const petData = {
@@ -86,7 +110,13 @@ export default function PetForm({
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
-            {...register('name')}
+            {...register('name', {
+              required: 'Name is required',
+              minLength: {
+                value: 3,
+                message: 'Name must be at least 2 characters long',
+              },
+            })}
             // type="text"
             // name="name"
             // required
@@ -101,7 +131,13 @@ export default function PetForm({
           <Label htmlFor="ownerName">Owner Name</Label>
           <Input
             id="ownerName"
-            {...register('ownerName')}
+            {...register('ownerName', {
+              required: 'Owner name is required',
+              minLength: {
+                value: 3,
+                message: 'Owner name must be at least 2 characters long',
+              },
+            })}
             // type="text"
             // name="ownerName"
             // required

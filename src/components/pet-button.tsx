@@ -12,6 +12,7 @@ import {
 import PetForm from './pet-form';
 import { useState } from 'react';
 import { flushSync } from 'react-dom';
+import { DialogDescription } from '@radix-ui/react-dialog';
 
 type PetButtonProps = {
   actionType: 'add' | 'edit' | 'checkout';
@@ -53,6 +54,13 @@ export default function PetButton({
           <DialogTitle>
             {actionType === 'add' ? 'Add a new pet' : 'Edit pet'}
           </DialogTitle>
+          <DialogDescription>
+            Fill out the form below to{' '}
+            {actionType === 'add'
+              ? 'create a new pet profile'
+              : 'edit this pet’s details'}
+            .
+          </DialogDescription>
           <PetForm
             actionType={actionType}
             onFormSubmission={() => {

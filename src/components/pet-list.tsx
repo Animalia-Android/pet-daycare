@@ -11,7 +11,7 @@ export default function PetList() {
 
   //derived state or methods
   const filteredPets = pets.filter((pet) =>
-    pet.name.toLowerCase().includes(searchQuery.toLowerCase())
+    pet.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
