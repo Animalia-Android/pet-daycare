@@ -1,9 +1,7 @@
 'use server';
 
-import { PetEssentials } from '@/lib/types';
 import { sleep } from '@/lib/utils';
 import { petFormSchema, petIdSchema } from '@/lib/validations';
-import { Pet } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 export async function addPet(pet: unknown) {
@@ -18,15 +16,6 @@ export async function addPet(pet: unknown) {
 
   try {
     await prisma?.pet.create({
-      // data: {
-      //   name: formData.get('name'),
-      //   ownerName: formData.get('ownerName'),
-      //   age: parseInt(formData.get('age')),
-      //   imageUrl:
-      //     formData.get('imageUrl') ||
-      //     'https://cdn-icons-png.flaticon.com/512/235/235405.png',
-      //   notes: formData.get('notes'),
-      // },
       data: validatedPet.data,
     });
   } catch (error) {
@@ -53,13 +42,7 @@ export async function editPet(petId: unknown, newPetData: unknown) {
   try {
     await prisma?.pet.update({
       where: { id: validatedPetId.data },
-      // data: {
-      //   name: formData.get('name'),
-      //   ownerName: formData.get('ownerName'),
-      //   age: parseInt(formData.get('age')),
-      //   imageUrl: formData.get('imageUrl'),
-      //   notes: formData.get('notes'),
-      // },
+
       data: validatedPet.data,
     });
   } catch (error) {
@@ -72,7 +55,7 @@ export async function editPet(petId: unknown, newPetData: unknown) {
 }
 
 export async function deletePet(petId: unknown) {
-  await sleep(2000);
+  await sleep(1000);
 
   const validatedPetId = petIdSchema.safeParse(petId);
 

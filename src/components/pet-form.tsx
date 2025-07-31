@@ -6,7 +6,6 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import PetFormBtn from './pet-form-btn';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DEAULT_PET_IMAGE_URL } from '@/lib/constants';
 import { petFormSchema, TPetForm } from '@/lib/validations';
@@ -34,7 +33,7 @@ export default function PetForm({
             name: selectedPet?.name,
             ownerName: selectedPet?.ownerName,
             imageUrl: selectedPet?.imageUrl,
-            age: selectedPet?.age,
+            age: selectedPet?.age as number,
             notes: selectedPet?.notes,
           }
         : undefined,
@@ -49,16 +48,6 @@ export default function PetForm({
           return;
         }
         onFormSubmission();
-
-        // const petData = {
-        //   name: formData.get('name') as string,
-        //   ownerName: formData.get('ownerName') as string,
-        //   imageUrl:
-        //     (formData.get('imageUrl') as string) ||
-        //     'https://cdn-icons-png.flaticon.com/512/235/235405.png',
-        //   age: Number(formData.get('age')) as number,
-        //   notes: formData.get('notes') as string,
-        // };
 
         const petData = getValues();
         petData.imageUrl = petData.imageUrl || DEAULT_PET_IMAGE_URL;

@@ -1,7 +1,7 @@
 import z from 'zod';
 import { DEAULT_PET_IMAGE_URL } from './constants';
 
-export const petIdSchema = z.string().cuid2();
+export const petIdSchema = z.string().cuid();
 
 export const petFormSchema = z
   .object({
@@ -33,6 +33,7 @@ export const petFormSchema = z
   .transform((data) => ({
     ...data,
     imageUrl: data.imageUrl || DEAULT_PET_IMAGE_URL,
+    age: Number(data.age),
   }));
 
 export type TPetForm = z.infer<typeof petFormSchema>;
