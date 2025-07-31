@@ -2,15 +2,19 @@
 
 import { PetEssentials } from '@/lib/types';
 import { sleep } from '@/lib/utils';
+import { petFormSchema, petIdSchema } from '@/lib/validations';
 import { Pet } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
-export async function addPet(petData: PetEssentials) {
-  await sleep(1000); // Simulate a delay for the action
-  console.log('Adding pet:', petData);
-  // await prisma?.pet.create({
-  //   data: pet,
-  // });
+export async function addPet(pet: unknown) {
+  await sleep(1000);
+
+  const validatedPet = petFormSchema.safeParse(pet);
+  if (!validatedPet.success) {
+    return {
+      message: 'Invalid pet data. Please check your input.',
+    };
+  }
 
   try {
     await prisma?.pet.create({
@@ -23,7 +27,7 @@ export async function addPet(petData: PetEssentials) {
       //     'https://cdn-icons-png.flaticon.com/512/235/235405.png',
       //   notes: formData.get('notes'),
       // },
-      data: petData,
+      data: validatedPet.data,
     });
   } catch (error) {
     return {
@@ -34,12 +38,21 @@ export async function addPet(petData: PetEssentials) {
   revalidatePath('/app/', 'layout'); // Revalidate the path to update the data
 }
 
-export async function editPet(petId: Pet['id'], newPetData: PetEssentials) {
-  await sleep(2000);
+export async function editPet(petId: unknown, newPetData: unknown) {
+  await sleep(1000);
+
+  const validatedPetId = petIdSchema.safeParse(petId);
+  const validatedPet = petFormSchema.safeParse(newPetData);
+
+  if (!validatedPet.success || !validatedPetId.success) {
+    return {
+      message: 'Invalid pet data. Please check your input.',
+    };
+  }
 
   try {
     await prisma?.pet.update({
-      where: { id: petId },
+      where: { id: validatedPetId.data },
       // data: {
       //   name: formData.get('name'),
       //   ownerName: formData.get('ownerName'),
@@ -47,7 +60,7 @@ export async function editPet(petId: Pet['id'], newPetData: PetEssentials) {
       //   imageUrl: formData.get('imageUrl'),
       //   notes: formData.get('notes'),
       // },
-      data: newPetData,
+      data: validatedPet.data,
     });
   } catch (error) {
     return {
@@ -58,12 +71,20 @@ export async function editPet(petId: Pet['id'], newPetData: PetEssentials) {
   revalidatePath('/app/', 'layout');
 }
 
-export async function deletePet(petId: Pet['id']) {
+export async function deletePet(petId: unknown) {
   await sleep(2000);
+
+  const validatedPetId = petIdSchema.safeParse(petId);
+
+  if (!validatedPetId.success) {
+    return {
+      message: 'Invalid pet data. Please check your input.',
+    };
+  }
 
   try {
     await prisma?.pet.delete({
-      where: { id: petId },
+      where: { id: validatedPetId.data },
     });
   } catch (error) {
     return {
