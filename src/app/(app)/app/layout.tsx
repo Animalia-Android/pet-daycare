@@ -21,6 +21,14 @@ export default async function Layout({
   // const data: Pet[] = await response.json();
 
   const pets = await prisma.pet.findMany({});
+  const user = await prisma.user.findUnique({
+    where: {
+      email: '1',
+    },
+    include: {
+      pets: true,
+    },
+  });
 
   return (
     <>
