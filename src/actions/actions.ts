@@ -1,8 +1,26 @@
 'use server';
 
+import { signIn } from '@/lib/auth';
 import { sleep } from '@/lib/utils';
 import { petFormSchema, petIdSchema } from '@/lib/validations';
 import { revalidatePath } from 'next/cache';
+
+//------ user actions ------
+
+export async function logIn(formData: FormData) {
+  // const data = {
+  //   email: authData.get('email'),
+  //   password: authData.get('password,'),
+  // };
+
+  const authData = Object.fromEntries(formData.entries());
+
+  console.log('Logging in with authData:', authData);
+
+  await signIn('credentials', authData);
+}
+
+//------ pet actions ------
 
 export async function addPet(pet: unknown) {
   await sleep(1000);
