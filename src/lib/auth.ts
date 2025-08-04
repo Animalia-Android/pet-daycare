@@ -58,9 +58,15 @@ const config = {
         return true;
       }
 
-      if (!isTryingToAccessApp) {
-        return true; // allow access to other pages
+      if (isLoggedIn && !isTryingToAccessApp) {
+        return Response.redirect(new URL('/app/dashboard', request.nextUrl));
       }
+
+      if (!isLoggedIn && !isTryingToAccessApp) {
+        return true;
+      }
+
+      return false;
     },
   },
   // session: {
