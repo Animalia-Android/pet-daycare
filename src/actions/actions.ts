@@ -1,6 +1,6 @@
 'use server';
 
-import { signIn } from '@/lib/auth';
+import { signIn, signOut } from '@/lib/auth';
 import { sleep } from '@/lib/utils';
 import { petFormSchema, petIdSchema } from '@/lib/validations';
 import { revalidatePath } from 'next/cache';
@@ -18,6 +18,10 @@ export async function logIn(formData: FormData) {
   console.log('Logging in with authData:', authData);
 
   await signIn('credentials', authData);
+}
+
+export async function logOut() {
+  await signOut({ redirectTo: '/' });
 }
 
 //------ pet actions ------
