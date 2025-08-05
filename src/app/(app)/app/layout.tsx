@@ -5,6 +5,8 @@ import { Toaster } from '@/components/ui/sonner';
 import PetContextProvider from '@/contexts/pet-context-provider';
 import SearchContextProvider from '@/contexts/search-context-provider';
 import prisma from '@/lib/db';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 export default async function Layout({
   children,
@@ -19,8 +21,18 @@ export default async function Layout({
   //   throw new Error('Failed to fetch pets');
   // }
   // const data: Pet[] = await response.json();
+  const session = await auth();
 
-  const pets = await prisma.pet.findMany({});
+  if (!session?.user) {
+    redirect('/login');
+  }
+
+  const pets = await prisma.pet.findMany({
+    where: {
+      userId: session.user.id,
+    },
+  });
+
   const user = await prisma.user.findUnique({
     where: {
       email: '1',
