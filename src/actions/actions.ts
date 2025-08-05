@@ -3,10 +3,12 @@
 import { signIn, signOut } from '@/lib/auth';
 import { sleep } from '@/lib/utils';
 import { petFormSchema, petIdSchema } from '@/lib/validations';
+import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 
 //------ user actions ------
 
+//login
 export async function logIn(formData: FormData) {
   // const data = {
   //   email: authData.get('email'),
@@ -20,8 +22,25 @@ export async function logIn(formData: FormData) {
   await signIn('credentials', authData);
 }
 
+//logout
 export async function logOut() {
   await signOut({ redirectTo: '/' });
+}
+
+//signup
+export async function signUp(formData: FormData) {
+  const hashedPassword = bcrypt.hashSync(
+    formData.get('password') as string,
+    10
+  );
+  await prisma?.user.create({
+    data: {
+      email: formData.get('email') as string,
+      hashedPassword: hashedPassword,
+    },
+  });
+
+  await signIn('credentials', formData);
 }
 
 //------ pet actions ------
