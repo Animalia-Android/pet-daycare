@@ -7,6 +7,7 @@ import SearchContextProvider from '@/contexts/search-context-provider';
 import prisma from '@/lib/db';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { checkAuth } from '@/lib/server-utils';
 
 export default async function Layout({
   children,
@@ -21,11 +22,7 @@ export default async function Layout({
   //   throw new Error('Failed to fetch pets');
   // }
   // const data: Pet[] = await response.json();
-  const session = await auth();
-
-  if (!session?.user) {
-    redirect('/login');
-  }
+  const session = await checkAuth();
 
   const pets = await prisma.pet.findMany({
     where: {
