@@ -6,7 +6,6 @@ import { sleep } from '@/lib/utils';
 import { petFormSchema, petIdSchema } from '@/lib/validations';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 //------ user actions ------
 
