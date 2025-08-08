@@ -6,13 +6,14 @@ import { sleep } from '@/lib/utils';
 import { authSchema, petFormSchema, petIdSchema } from '@/lib/validations';
 import { Prisma } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 //------ user actions ------
 
 //login
-export async function logIn(formData: unknown) {
+export async function logIn(prevState: unknown, formData: unknown) {
   await sleep(1000);
   //reshape form data
   // const data = {
@@ -27,7 +28,25 @@ export async function logIn(formData: unknown) {
     };
   }
 
-  await signIn('credentials', formData);
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin': {
+          return { message: 'Invalid credentials.' };
+        }
+        default: {
+          return {
+            message: 'Could not sign in.',
+          };
+        }
+      }
+    }
+    return {
+      message: 'Could not sign in',
+    };
+  }
 
   redirect('/app/dashboard');
 }
@@ -38,7 +57,7 @@ export async function logOut() {
 }
 
 //signup
-export async function signUp(formData: unknown) {
+export async function signUp(prevState: unknown, formData: unknown) {
   await sleep(1000);
   //check if formData is a FormData type
   if (!(formData instanceof FormData)) {
