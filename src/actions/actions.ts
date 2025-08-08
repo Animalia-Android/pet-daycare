@@ -43,16 +43,16 @@ export async function logIn(prevState: unknown, formData: unknown) {
         }
       }
     }
-    return {
-      message: 'Could not sign in',
-    };
+    throw error; //nextjs redirects throws error, so we have to rethrow it
   }
 
-  redirect('/app/dashboard');
+  // redirect('/app/dashboard'); dont need this
 }
 
 //logout
 export async function logOut() {
+  await sleep(1000);
+
   await signOut({ redirectTo: '/' });
 }
 
