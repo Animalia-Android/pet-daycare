@@ -18,6 +18,7 @@ export default function AuthForm({ type }: AuthFormProps) {
           name="email"
           type="email"
           placeholder="Enter your email"
+          maxLength={30}
           required
         />
       </div>
@@ -29,6 +30,7 @@ export default function AuthForm({ type }: AuthFormProps) {
           name="password"
           type="password"
           placeholder="Enter your password"
+          maxLength={30}
           required
         />
       </div>

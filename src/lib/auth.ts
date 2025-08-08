@@ -2,6 +2,7 @@ import NextAuth, { NextAuthConfig } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { getUserByEmail } from './server-utils';
+import { authSchema } from './validations';
 
 const config = {
   pages: {
@@ -9,12 +10,17 @@ const config = {
   },
   providers: [
     CredentialsProvider({
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         //runs on login
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
+
+        //validation
+        const validatedFormData = authSchema.safeParse(credentials);
+        if (!validatedFormData.success) {
+          return null;
+        }
+
+        //extract values
+        const { email, password } = validatedFormData.data;
 
         const user = await getUserByEmail(email);
 

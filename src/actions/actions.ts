@@ -3,24 +3,29 @@
 import { auth, signIn, signOut } from '@/lib/auth';
 import { checkAuth, getPetById } from '@/lib/server-utils';
 import { sleep } from '@/lib/utils';
-import { petFormSchema, petIdSchema } from '@/lib/validations';
+import { authSchema, petFormSchema, petIdSchema } from '@/lib/validations';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 //------ user actions ------
 
 //login
-export async function logIn(formData: FormData) {
+export async function logIn(formData: unknown) {
+  //reshape form data
   // const data = {
   //   email: authData.get('email'),
   //   password: authData.get('password,'),
   // };
+  // const authData = Object.fromEntries(formData.entries());
 
-  const authData = Object.fromEntries(formData.entries());
+  if (!(formData instanceof FormData)) {
+    return { message: 'Invalid form data' };
+  }
 
-  console.log('Logging in with authData:', authData);
+  await signIn('credentials', formData);
 
-  await signIn('credentials', authData);
+  redirect('/app/dashboard');
 }
 
 //logout
