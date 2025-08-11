@@ -243,8 +243,8 @@ export async function createCheckoutSession() {
       },
     ],
     mode: 'payment',
-    success_url: `${process.env.CANONICAL_URL}/paymenet?success=true`,
-    cancel_url: `${process.env.CANONICAL_URL}/paymenet?canceled=true`,
+    success_url: `${process.env.CANONICAL_URL}/payment?success=true`,
+    cancel_url: `${process.env.CANONICAL_URL}/payment?canceled=true`,
   });
   //redirect user
 
