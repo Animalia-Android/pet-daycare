@@ -13,7 +13,7 @@ export default function Page({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const [isPending, startTransistion] = useTransition();
-  const { update } = useSession();
+  const { data: session, update, status } = useSession();
   const router = useRouter();
 
   return (
@@ -21,14 +21,16 @@ export default function Page({
       {searchParams.success && (
         <Button
           onClick={async () => {
-            await update(true);
             console.log('***Button Clicked***');
-            router.push('/app/dasboard');
+            await update(true);
+            router.push('/app/dashboard');
           }}
+          disabled={status === 'loading' || session?.user.hasAccess}
         >
           Access PetSoft
         </Button>
       )}
+
       {!searchParams.success && (
         <>
           <H1>PetSoft access requires payment</H1>

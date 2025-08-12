@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { getUserByEmail } from './server-utils';
 import { authSchema } from './validations';
+import { sleep } from './utils';
 
 const config = {
   pages: {
@@ -92,6 +93,8 @@ const config = {
 
       if (trigger === 'update') {
         console.log('TRIGGERED!!!!!');
+        await sleep(1000);
+        //on every request
         const userFromDb = await getUserByEmail(token.email);
 
         if (userFromDb) {
@@ -103,10 +106,8 @@ const config = {
     },
 
     session: ({ session, token }) => {
-      // if (session.user) {
-      //   session.user.id = token.userId;
-      //   session.user.hasAccess = token.hasAccess;
-      // }
+      session.user.id = token.userId;
+      session.user.hasAccess = token.hasAccess;
 
       return session;
     },
