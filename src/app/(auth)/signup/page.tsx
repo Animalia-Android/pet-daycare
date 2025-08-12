@@ -10,9 +10,9 @@ export default function Page() {
       <AuthForm type="signUp" />
 
       <p className="mt-6 text-sm text-zinc-500 text-center">
-        Already have an account?{' '}
-        <Link className="font-medium" href="/login">
-          Log in
+        No account yet?{' '}
+        <Link className="font-medium" href="/signup">
+          Sign up
         </Link>
       </p>
     </main>
